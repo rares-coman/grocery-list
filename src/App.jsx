@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "./Form";
 import GroceryItems from "./GroceryItems";
 import { ToastContainer, toast } from "react-toastify";
 import { nanoid } from "nanoid";
 import ClearItemsButton from "./ClearItemsButton";
 const App = () => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => {
+    const storedItems = localStorage.getItem("groceryItems");
+    return storedItems ? JSON.parse(storedItems) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("groceryItems", JSON.stringify(items));
+  }, [items]);
 
   const addGroceryItem = (text) => {
     const newItem = { id: nanoid(), text, checked: false };
